@@ -17,6 +17,7 @@ import (
 	"github.com/influxdata/telegraf/plugins/inputs/webhooks/artifactory"
 	"github.com/influxdata/telegraf/plugins/inputs/webhooks/filestack"
 	"github.com/influxdata/telegraf/plugins/inputs/webhooks/github"
+	"github.com/influxdata/telegraf/plugins/inputs/webhooks/jamf"
 	"github.com/influxdata/telegraf/plugins/inputs/webhooks/mandrill"
 	"github.com/influxdata/telegraf/plugins/inputs/webhooks/papertrail"
 	"github.com/influxdata/telegraf/plugins/inputs/webhooks/particle"
