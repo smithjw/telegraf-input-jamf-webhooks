@@ -45,13 +45,14 @@ type Webhooks struct {
 	ReadTimeout    config.Duration `toml:"read_timeout"`
 	WriteTimeout   config.Duration `toml:"write_timeout"`
 
-	Github      *github.GithubWebhook           `toml:"github"`
+	Artifactory *artifactory.ArtifactoryWebhook `toml:"artifactory"`
 	Filestack   *filestack.FilestackWebhook     `toml:"filestack"`
+	Github      *github.GithubWebhook           `toml:"github"`
+	Jamf        *jamf.JamfWebhook               `toml:"jamf"`
 	Mandrill    *mandrill.MandrillWebhook       `toml:"mandrill"`
-	Rollbar     *rollbar.RollbarWebhook         `toml:"rollbar"`
 	Papertrail  *papertrail.PapertrailWebhook   `toml:"papertrail"`
 	Particle    *particle.ParticleWebhook       `toml:"particle"`
-	Artifactory *artifactory.ArtifactoryWebhook `toml:"artifactory"`
+	Rollbar     *rollbar.RollbarWebhook         `toml:"rollbar"`
 
 	Log telegraf.Logger `toml:"-"`
 
