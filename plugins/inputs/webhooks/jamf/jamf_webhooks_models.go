@@ -66,12 +66,16 @@ type MobileDevice struct {
 	WifiMacAddress      string `json:"wifiMacAddress"`
 }
 
-type ComputerInventoryCompletedEvent struct {
+// This struct/function is used across the following events:
+//   - ComputerAdded
+//   - ComputerInventoryCompleted
+//   - ComputerPushCapabilityChanged
+type ComputerEvent struct {
 	Event   Computer `json:"event"`
 	Webhook Webhook  `json:"webhook"`
 }
 
-func (s ComputerInventoryCompletedEvent) NewMetric() telegraf.Metric {
+func (s ComputerEvent) NewMetric() telegraf.Metric {
 	t := map[string]string{
 		"event":         s.Webhook.Event,
 		"jss_id":        strconv.Itoa(s.Event.JssID),
@@ -91,15 +95,13 @@ func (s ComputerInventoryCompletedEvent) NewMetric() telegraf.Metric {
 	return m
 }
 
-type ComputerPolicyEvent struct {
-	Computer   Computer `json:"computer"`
-	PolicyID   int      `json:"policyId"`
-	Successful bool     `json:"successful"`
-}
-
 type ComputerPolicyFinishedEvent struct {
-	Event   ComputerPolicyEvent `json:"event"`
-	Webhook Webhook             `json:"webhook"`
+	Event struct {
+		Computer   Computer `json:"computer"`
+		PolicyID   int      `json:"policyId"`
+		Successful bool     `json:"successful"`
+	} `json:"event"`
+	Webhook Webhook `json:"webhook"`
 }
 
 func (s ComputerPolicyFinishedEvent) NewMetric() telegraf.Metric {
@@ -119,64 +121,81 @@ func (s ComputerPolicyFinishedEvent) NewMetric() telegraf.Metric {
 }
 
 type ComputerCheckInEvent struct {
-	Computer Computer `json:"computer"`
-	Trigger  string   `json:"trigger"`
-	Username string   `json:"username"`
-	Webhook  Webhook  `json:"webhook"`
+	Event struct {
+		Computer Computer `json:"computer"`
+		Trigger  string   `json:"trigger"`
+		Username string   `json:"username"`
+	} `json:"event"`
+	Webhook Webhook `json:"webhook"`
 }
 
-type PatchPolicyAction struct {
-	Action []string `json:"action"`
-}
-
-type ComputerPatchPolicyCompletedEvent struct {
-	Computer        Computer          `json:"computer"`
-	DeployedVersion string            `json:"deployedVersion"`
-	EventActions    PatchPolicyAction `json:"eventActions"`
-	PatchPolicyID   int               `json:"patchPolicyId"`
-	PatchPolicyName string            `json:"patchPolicyName"`
-	SoftwareTitleID int               `json:"softwareTitleId"`
-	Successful      bool              `json:"successful"`
-	Webhook         Webhook           `json:"webhook"`
-}
-
-type ComputerPushCapabilityChangedEvent struct {
-	Computer Computer `json:"computer"`
-	Webhook  Webhook  `json:"webhook"`
-}
-
-type DeviceAddedToDEPEvent struct {
-	AssetTag                          string  `json:"assetTag"`
-	Description                       string  `json:"description"`
-	DeviceAssignedDate                int     `json:"deviceAssignedDate"`
-	DeviceEnrollmentProgramInstanceID int     `json:"deviceEnrollmentProgramInstanceId"`
-	Model                             string  `json:"model"`
-	SerialNumber                      string  `json:"serialNumber"`
-	Webhook                           Webhook `json:"webhook"`
-}
-
-type JSSEvent struct {
-	HostAddress        string  `json:"hostAddress"`
-	Institution        string  `json:"institution"`
-	IsClusterMaster    bool    `json:"isClusterMaster"`
-	JssURL             string  `json:"jssUrl"`
-	WebApplicationPath string  `json:"webApplicationPath"`
-	Webhook            Webhook `json:"webhook"`
-}
-
-func (s JSSEvent) NewMetric() telegraf.Metric {
+func (s ComputerCheckInEvent) NewMetric() telegraf.Metric {
 	t := map[string]string{
-		"event":   s.Webhook.Event,
-		"jss_url": s.JssURL,
+		"event":         s.Webhook.Event,
+		"serial_number": s.Event.Computer.SerialNumber,
+		"management_id": s.Event.Computer.ManagementID,
+		"jss_id":        strconv.Itoa(s.Event.Computer.JssID),
 	}
 	f := map[string]interface{}{
-		"host_address":      s.HostAddress,
-		"is_cluster_master": s.IsClusterMaster,
+		"check_in_username": s.Event.Username,
+		"check_in_trigger":  s.Event.Trigger,
+		"username":          s.Event.Computer.Username,
+		"device_name":       s.Event.Computer.DeviceName,
 	}
 	m := metric.New(measurement, t, f, time.Unix(s.Webhook.Timestamp, 0))
 	return m
 }
 
+type DeviceAddedToDEPEvent struct {
+	Event struct {
+		AssetTag                          string `json:"assetTag"`
+		Description                       string `json:"description"`
+		DeviceAssignedDate                int    `json:"deviceAssignedDate"`
+		DeviceEnrollmentProgramInstanceID int    `json:"deviceEnrollmentProgramInstanceId"`
+		Model                             string `json:"model"`
+		SerialNumber                      string `json:"serialNumber"`
+	} `json:"event"`
+	Webhook Webhook `json:"webhook"`
+}
+
+func (s DeviceAddedToDEPEvent) NewMetric() telegraf.Metric {
+	t := map[string]string{
+		"event":           s.Webhook.Event,
+		"serial_number":   s.Event.SerialNumber,
+		"asset_tag":       s.Event.AssetTag,
+		"ade_instance_id": strconv.Itoa(s.Event.DeviceEnrollmentProgramInstanceID),
+	}
+	f := map[string]interface{}{
+		"description":   s.Event.Description,
+		"assigned_date": s.Event.DeviceAssignedDate,
+		"model":         s.Event.Model,
+	}
+	m := metric.New(measurement, t, f, time.Unix(s.Webhook.Timestamp, 0))
+	return m
+}
+
+// type PatchPolicyAction struct {
+// 	Action []string `json:"action"`
+// }
+
+// type ComputerPatchPolicyCompletedEvent struct {
+// 	Computer        Computer          `json:"computer"`
+// 	DeployedVersion string            `json:"deployedVersion"`
+// 	EventActions    PatchPolicyAction `json:"eventActions"`
+// 	PatchPolicyID   int               `json:"patchPolicyId"`
+// 	PatchPolicyName string            `json:"patchPolicyName"`
+// 	SoftwareTitleID int               `json:"softwareTitleId"`
+// 	Successful      bool              `json:"successful"`
+// 	Webhook         Webhook           `json:"webhook"`
+// }
+
+// This struct/function is used across the following events:
+//   - MobileDeviceCheckIn
+//   - MobileDeviceCommandCompleted
+//   - MobileDeviceEnrolled
+//   - MobileDeviceInventoryCompleted
+//   - MobileDevicePushSent
+//   - MobileDeviceUnenrolled
 type MobileDeviceEvent struct {
 	Event   MobileDevice `json:"mobileDevice"`
 	Webhook Webhook      `json:"webhook"`
@@ -196,6 +215,31 @@ func (s MobileDeviceEvent) NewMetric() telegraf.Metric {
 		"device_model":         s.Event.Model,
 		"device_model_display": s.Event.ModelDisplay,
 		"device_udid":          s.Event.UDID,
+	}
+	m := metric.New(measurement, t, f, time.Unix(s.Webhook.Timestamp, 0))
+	return m
+}
+
+// This struct/function is used across the following events:
+//   - JSSShutdown
+//   - JSSStartup
+type JSSEvent struct {
+	HostAddress        string  `json:"hostAddress"`
+	Institution        string  `json:"institution"`
+	IsClusterMaster    bool    `json:"isClusterMaster"`
+	JssURL             string  `json:"jssUrl"`
+	WebApplicationPath string  `json:"webApplicationPath"`
+	Webhook            Webhook `json:"webhook"`
+}
+
+func (s JSSEvent) NewMetric() telegraf.Metric {
+	t := map[string]string{
+		"event":   s.Webhook.Event,
+		"jss_url": s.JssURL,
+	}
+	f := map[string]interface{}{
+		"host_address":      s.HostAddress,
+		"is_cluster_master": s.IsClusterMaster,
 	}
 	m := metric.New(measurement, t, f, time.Unix(s.Webhook.Timestamp, 0))
 	return m

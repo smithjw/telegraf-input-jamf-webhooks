@@ -72,7 +72,6 @@ func ComputerPolicyFinishedJSON() string {
 }`
 }
 
-// TODO:
 func ComputerAddedJSON() string {
 	return `{
 	"event": {
@@ -194,7 +193,6 @@ func ComputerPatchPolicyCompletedJSON() string {
 }`
 }
 
-// TODO:
 func ComputerPushCapabilityChangedJSON() string {
 	return `{
 	"event": {
@@ -229,7 +227,6 @@ func ComputerPushCapabilityChangedJSON() string {
 }`
 }
 
-// TODO:
 func DeviceAddedToDEPJSON() string {
 	return `{
 	"event": {
@@ -249,7 +246,6 @@ func DeviceAddedToDEPJSON() string {
 }`
 }
 
-// TODO:
 func JSSShutdownJSON() string {
 	return `{
 	"event": {
@@ -268,7 +264,6 @@ func JSSShutdownJSON() string {
 }`
 }
 
-// TODO:
 func JSSStartupJSON() string {
 	return `{
 	"event": {
@@ -287,7 +282,6 @@ func JSSStartupJSON() string {
 }`
 }
 
-// TODO:
 func MobileDeviceCheckInJSON() string {
 	return `{
 	"event": {
@@ -320,7 +314,6 @@ func MobileDeviceCheckInJSON() string {
 }`
 }
 
-// TODO:
 func MobileDeviceCommandCompletedJSON() string {
 	return `{
 	"event": {
@@ -353,7 +346,6 @@ func MobileDeviceCommandCompletedJSON() string {
 }`
 }
 
-// TODO:
 func MobileDeviceEnrolledJSON() string {
 	return `{
 	"event": {
@@ -386,7 +378,6 @@ func MobileDeviceEnrolledJSON() string {
 }`
 }
 
-// TODO:
 func MobileDeviceInventoryCompletedJSON() string {
 	return `{
 	"event": {
@@ -419,7 +410,6 @@ func MobileDeviceInventoryCompletedJSON() string {
 }`
 }
 
-// TODO:
 func MobileDevicePushSentJSON() string {
 	return `{
 	"event": {
@@ -452,7 +442,6 @@ func MobileDevicePushSentJSON() string {
 }`
 }
 
-// TODO:
 func MobileDeviceUnenrolledJSON() string {
 	return `{
 	"event": {

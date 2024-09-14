@@ -92,19 +92,19 @@ func (jh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
 	jh.log.Debugf("New %v event received", name)
 	switch name {
 	case "ComputerInventoryCompleted":
-		return generateEvent(data, &ComputerInventoryCompletedEvent{})
+		return generateEvent(data, &ComputerEvent{})
 	case "ComputerPolicyFinished":
 		return generateEvent(data, &ComputerPolicyFinishedEvent{})
-	// case "ComputerAdded":
-	// 	return generateEvent(data, &ComputerAddedEvent{})
-	// case "ComputerCheckIn":
-	// 	return generateEvent(data, &ComputerCheckInEvent{})
+	case "ComputerAdded":
+		return generateEvent(data, &ComputerEvent{})
+	case "ComputerCheckIn":
+		return generateEvent(data, &ComputerCheckInEvent{})
 	// case "ComputerPatchPolicyCompleted":
 	// 	return generateEvent(data, &ComputerPatchPolicyCompletedEvent{})
-	// case "ComputerPushCapabilityChanged":
-	// 	return generateEvent(data, &ComputerPushCapabilityChangedEvent{})
-	// case "DeviceAddedToDEP":
-	// 	return generateEvent(data, &DeviceAddedToDEPEvent{})
+	case "ComputerPushCapabilityChanged":
+		return generateEvent(data, &ComputerEvent{})
+	case "DeviceAddedToDEP":
+		return generateEvent(data, &DeviceAddedToDEPEvent{})
 	case "JSSShutdown":
 		return generateEvent(data, &JSSEvent{})
 	case "JSSStartup":

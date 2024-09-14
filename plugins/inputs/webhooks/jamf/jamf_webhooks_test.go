@@ -31,22 +31,22 @@ func TestComputerInventoryCompletedEvent(t *testing.T) {
 	JamfWebhookRequest(t, "ComputerInventoryCompleted", ComputerInventoryCompletedJSON())
 }
 
-// To Do
-// func TestDeviceAddedToDEPEvent(t *testing.T) {
-// 	JamfWebhookRequest(t, "DeviceAddedToDEP", DeviceAddedToDEPJSON())
-// }
+func TestDeviceAddedToDEPEvent(t *testing.T) {
+	JamfWebhookRequest(t, "DeviceAddedToDEP", DeviceAddedToDEPJSON())
+}
 
-// func TestComputerAddedEvent(t *testing.T) {
-// 	JamfWebhookRequest(t, "ComputerAdded", ComputerAddedJSON())
-// }
+func TestComputerAddedEvent(t *testing.T) {
+	JamfWebhookRequest(t, "ComputerAdded", ComputerAddedJSON())
+}
 
 // func TestSmartGroupComputerMembershipChangeEvent(t *testing.T) {
 // 	JamfWebhookRequest(t, "SmartGroupComputerMembershipChange", SmartGroupComputerMembershipChangeJSON())
 // }
 
-// func TestComputerCheckInEvent(t *testing.T) {
-// 	JamfWebhookRequest(t, "ComputerCheckIn", ComputerCheckInJSON())
-// }
+func TestComputerCheckInEvent(t *testing.T) {
+	JamfWebhookRequest(t, "ComputerCheckIn", ComputerCheckInJSON())
+}
+
 // func TestComputerPatchPolicyCompletedEvent(t *testing.T) {
 // 	JamfWebhookRequest(t, "ComputerPatchPolicyCompleted", ComputerPatchPolicyCompletedJSON())
 // }
@@ -59,9 +59,9 @@ func TestJSSStartupEvent(t *testing.T) {
 	JamfWebhookRequest(t, "JSSStartup", JSSStartupJSON())
 }
 
-// func TestComputerPushCapabilityChangedEvent(t *testing.T) {
-// 	JamfWebhookRequest(t, "ComputerPushCapabilityChanged", ComputerPushCapabilityChangedJSON())
-// }
+func TestComputerPushCapabilityChangedEvent(t *testing.T) {
+	JamfWebhookRequest(t, "ComputerPushCapabilityChanged", ComputerPushCapabilityChangedJSON())
+}
 
 func TestMobileDeviceCheckInEvent(t *testing.T) {
 	JamfWebhookRequest(t, "MobileDeviceCheckIn", MobileDeviceCheckInJSON())
