@@ -95,6 +95,44 @@ func (jh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
 		return generateEvent(data, &ComputerInventoryCompletedEvent{})
 	case "ComputerPolicyFinished":
 		return generateEvent(data, &ComputerPolicyFinishedEvent{})
+	// case "ComputerAdded":
+	// 	return generateEvent(data, &ComputerAddedEvent{})
+	// case "ComputerCheckIn":
+	// 	return generateEvent(data, &ComputerCheckInEvent{})
+	// case "ComputerPatchPolicyCompleted":
+	// 	return generateEvent(data, &ComputerPatchPolicyCompletedEvent{})
+	// case "ComputerPushCapabilityChanged":
+	// 	return generateEvent(data, &ComputerPushCapabilityChangedEvent{})
+	// case "DeviceAddedToDEP":
+	// 	return generateEvent(data, &DeviceAddedToDEPEvent{})
+	case "JSSShutdown":
+		return generateEvent(data, &JSSEvent{})
+	case "JSSStartup":
+		return generateEvent(data, &JSSEvent{})
+	case "MobileDeviceCheckIn":
+		return generateEvent(data, &MobileDeviceEvent{})
+	case "MobileDeviceCommandCompleted":
+		return generateEvent(data, &MobileDeviceEvent{})
+	case "MobileDeviceEnrolled":
+		return generateEvent(data, &MobileDeviceEvent{})
+	case "MobileDeviceInventoryCompleted":
+		return generateEvent(data, &MobileDeviceEvent{})
+	case "MobileDevicePushSent":
+		return generateEvent(data, &MobileDeviceEvent{})
+	case "MobileDeviceUnenrolled":
+		return generateEvent(data, &MobileDeviceEvent{})
+	// case "PatchSoftwareTitleUpdated":
+	// 	return generateEvent(data, &PatchSoftwareTitleUpdatedEvent{})
+	// case "PushSent":
+	// 	return generateEvent(data, &PushSentEvent{})
+	// case "RestAPIOperation":
+	// 	return generateEvent(data, &RestAPIOperationEvent{})
+	// case "SmartGroupComputerMembershipChange":
+	// 	return generateEvent(data, &SmartGroupComputerMembershipChangeEvent{})
+	// case "SmartGroupMobileDeviceMembershipChange":
+	// 	return generateEvent(data, &SmartGroupMobileDeviceMembershipChangeEvent{})
+	// case "SmartGroupUserMembershipChange":
+	// 	return generateEvent(data, &SmartGroupUserMembershipChangeEvent{})
 	default:
 		return nil, &newEventError{"Not a recognized event type"}
 	}

@@ -31,24 +31,78 @@ func TestComputerInventoryCompletedEvent(t *testing.T) {
 	JamfWebhookRequest(t, "ComputerInventoryCompleted", ComputerInventoryCompletedJSON())
 }
 
-// Webhooks to add:
-//   ComputerAdded
-//   ComputerCheckIn
-//   ComputerPatchPolicyCompleted
-//   ComputerPushCapabilityChanged
-//   DeviceAddedToDEP
-//   JSSShutdown
-//   JSSStartup
-//   MobileDeviceCheckIn
-//   MobileDeviceCommandCompleted
-//   MobileDeviceEnrolled
-//   MobileDeviceInventoryCompleted
-//   MobileDevicePushSent
-//   MobileDeviceUnenrolled
-//   PatchSoftwareTitleUpdated
-//   PushSent
-//   RestAPIOperation
-//   SCEPChallenge
-//   SmartGroupComputerMembershipChange
-//   SmartGroupMobileDeviceMembershipChange
-//   SmartGroupUserMembershipChange
+// To Do
+// func TestDeviceAddedToDEPEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "DeviceAddedToDEP", DeviceAddedToDEPJSON())
+// }
+
+// func TestComputerAddedEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "ComputerAdded", ComputerAddedJSON())
+// }
+
+// func TestSmartGroupComputerMembershipChangeEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "SmartGroupComputerMembershipChange", SmartGroupComputerMembershipChangeJSON())
+// }
+
+// func TestComputerCheckInEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "ComputerCheckIn", ComputerCheckInJSON())
+// }
+// func TestComputerPatchPolicyCompletedEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "ComputerPatchPolicyCompleted", ComputerPatchPolicyCompletedJSON())
+// }
+
+func TestJSSShutdownEvent(t *testing.T) {
+	JamfWebhookRequest(t, "JSSShutdown", JSSShutdownJSON())
+}
+
+func TestJSSStartupEvent(t *testing.T) {
+	JamfWebhookRequest(t, "JSSStartup", JSSStartupJSON())
+}
+
+// func TestComputerPushCapabilityChangedEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "ComputerPushCapabilityChanged", ComputerPushCapabilityChangedJSON())
+// }
+
+func TestMobileDeviceCheckInEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDeviceCheckIn", MobileDeviceCheckInJSON())
+}
+
+func TestMobileDeviceCommandCompletedEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDeviceCommandCompleted", MobileDeviceCommandCompletedJSON())
+}
+
+func TestMobileDeviceEnrolledEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDeviceEnrolled", MobileDeviceEnrolledJSON())
+}
+
+func TestMobileDeviceInventoryCompletedEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDeviceInventoryCompleted", MobileDeviceInventoryCompletedJSON())
+}
+
+func TestMobileDevicePushSentEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDevicePushSent", MobileDevicePushSentJSON())
+}
+
+func TestMobileDeviceUnenrolledEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDeviceUnenrolled", MobileDeviceUnenrolledJSON())
+}
+
+// func TestPatchSoftwareTitleUpdatedEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "PatchSoftwareTitleUpdated", PatchSoftwareTitleUpdatedJSON())
+// }
+
+// func TestPushSentEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "PushSent", PushSentJSON())
+// }
+
+// func TestRestAPIOperationEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "RestAPIOperation", RestAPIOperationJSON())
+// }
+
+// func TestSmartGroupMobileDeviceMembershipChangeEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "SmartGroupMobileDeviceMembershipChange", SmartGroupMobileDeviceMembershipChangeJSON())
+// }
+
+// func TestSmartGroupUserMembershipChangeEvent(t *testing.T) {
+// 	JamfWebhookRequest(t, "SmartGroupUserMembershipChange", SmartGroupUserMembershipChangeJSON())
+// }
