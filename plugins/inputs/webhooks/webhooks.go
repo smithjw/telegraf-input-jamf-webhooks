@@ -10,22 +10,12 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/smithjw/telegraf-input-jamf-webhooks/plugins/inputs/webhooks/jamf"
 
 	"github.com/influxdata/telegraf"
 	"github.com/influxdata/telegraf/config"
 	"github.com/influxdata/telegraf/plugins/inputs"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/artifactory"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/filestack"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/github"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/jamf"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/mandrill"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/papertrail"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/particle"
-	"github.com/influxdata/telegraf/plugins/inputs/webhooks/rollbar"
 )
-
-//go:embed sample.conf
-var sampleConfig string
 
 const (
 	defaultReadTimeout  = 10 * time.Second
@@ -37,7 +27,7 @@ type Webhook interface {
 }
 
 func init() {
-	inputs.Add("webhooks", func() telegraf.Input { return NewWebhooks() })
+	inputs.Add("external_webhooks", func() telegraf.Input { return NewWebhooks() })
 }
 
 type Webhooks struct {
@@ -45,17 +35,9 @@ type Webhooks struct {
 	ReadTimeout    config.Duration `toml:"read_timeout"`
 	WriteTimeout   config.Duration `toml:"write_timeout"`
 
-	Artifactory *artifactory.ArtifactoryWebhook `toml:"artifactory"`
-	Filestack   *filestack.FilestackWebhook     `toml:"filestack"`
-	Github      *github.GithubWebhook           `toml:"github"`
-	Jamf        *jamf.JamfWebhook               `toml:"jamf"`
-	Mandrill    *mandrill.MandrillWebhook       `toml:"mandrill"`
-	Papertrail  *papertrail.PapertrailWebhook   `toml:"papertrail"`
-	Particle    *particle.ParticleWebhook       `toml:"particle"`
-	Rollbar     *rollbar.RollbarWebhook         `toml:"rollbar"`
+	Jamf *jamf.JamfWebhook `toml:"jamf"`
 
 	Log telegraf.Logger `toml:"-"`
-
 	srv *http.Server
 }
 
@@ -63,8 +45,14 @@ func NewWebhooks() *Webhooks {
 	return &Webhooks{}
 }
 
-func (*Webhooks) SampleConfig() string {
-	return sampleConfig
+func (wb *Webhooks) SampleConfig() string {
+	return `
+  ## Address and port to host Webhook listener on
+  service_address = ":1619"
+
+  [inputs.external_webhooks.plex]
+    path = "/jamf"
+`
 }
 
 func (wb *Webhooks) Gather(_ telegraf.Accumulator) error {
