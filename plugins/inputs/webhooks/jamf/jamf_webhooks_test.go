@@ -91,9 +91,9 @@ func TestMobileDeviceUnenrolledEvent(t *testing.T) {
 // 	JamfWebhookRequest(t, "PatchSoftwareTitleUpdated", PatchSoftwareTitleUpdatedJSON())
 // }
 
-// func TestPushSentEvent(t *testing.T) {
-// 	JamfWebhookRequest(t, "PushSent", PushSentJSON())
-// }
+func TestPushSentEvent(t *testing.T) {
+	JamfWebhookRequest(t, "PushSent", PushSentJSON())
+}
 
 // func TestRestAPIOperationEvent(t *testing.T) {
 // 	JamfWebhookRequest(t, "RestAPIOperation", RestAPIOperationJSON())

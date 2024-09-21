@@ -106,7 +106,6 @@ func ComputerAddedJSON() string {
 }`
 }
 
-// TODO:
 func ComputerCheckInJSON() string {
 	return `{
 	"event": {
@@ -496,7 +495,6 @@ func PatchSoftwareTitleUpdatedJSON() string {
 }`
 }
 
-// TODO:
 func PushSentJSON() string {
 	return `{
 	"event": {

@@ -123,8 +123,8 @@ func (jh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
 		return generateEvent(data, &MobileDeviceEvent{})
 	// case "PatchSoftwareTitleUpdated":
 	// 	return generateEvent(data, &PatchSoftwareTitleUpdatedEvent{})
-	// case "PushSent":
-	// 	return generateEvent(data, &PushSentEvent{})
+	case "PushSent":
+		return generateEvent(data, &PushSentEvent{})
 	// case "RestAPIOperation":
 	// 	return generateEvent(data, &RestAPIOperationEvent{})
 	// case "SmartGroupComputerMembershipChange":
