@@ -1,0 +1,33 @@
+on:
+  workflow_dispatch:
+  # release:
+  #   types: [created]
+
+permissions:
+    contents: write
+    packages: write
+
+jobs:
+  build_and_release:
+    name: Build and Release (${{ matrix.goos }}_${{ matrix.goarch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux] # [linux, windows, darwin]
+        goarch: [amd64] # ["386", amd64, arm64]
+        exclude:
+          - goarch: "386"
+            goos: darwin
+          - goarch: arm64
+            goos: windows
+    steps:
+    - uses: actions/checkout@v4
+    - uses: wangyoucao577/go-release-action@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        goversion: "1.23.1"
+        project_path: "./cmd/main.go"
+        binary_name: "jamf-webhooks"
+        # extra_files: LICENSE README.md
