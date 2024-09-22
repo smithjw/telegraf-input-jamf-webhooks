@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := build
 
 build:
-	go build -o bin/webhook-jamf cmd/main.go
+	go build -o bin/jamf_webhooks cmd/main.go
 
 deps:
 	go mod vendor
@@ -13,4 +13,4 @@ test:
 	go test -timeout 30s -count=1 ./plugins/inputs/webhooks/jamf
 
 run:
-	./bin/webhook-jamf --config plugin.conf
+	./bin/jamf_webhooks --config plugin.conf
