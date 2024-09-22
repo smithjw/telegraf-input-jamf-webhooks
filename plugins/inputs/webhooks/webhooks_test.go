@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/smithjw/telegraf-input-jamf-webhooks/plugins/inputs/webhooks"
+	"github.com/smithjw/telegraf-input-jamf-webhooks/plugins/inputs/webhooks/jamf"
 )
 
 func TestAvailableWebhooks(t *testing.T) {
