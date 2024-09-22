@@ -22,12 +22,13 @@ jobs:
             goos: windows
     steps:
     - uses: actions/checkout@v4
-    - uses: wangyoucao577/go-release-action@v1
+    - uses: wangyoucao577/go-release-action@6ac7dba1f9e61850053324549cb6bc88e4b473d2 # v1.51
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         goos: ${{ matrix.goos }}
         goarch: ${{ matrix.goarch }}
-        goversion: "1.23.1"
-        project_path: "./cmd/main.go"
+        # goversion: "1.23.1"
+        project_path: "cmd/main.go"
         binary_name: "jamf-webhooks"
+        upload: false
         # extra_files: LICENSE README.md
