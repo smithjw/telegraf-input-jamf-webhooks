@@ -14,21 +14,32 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [linux] # [linux, windows, darwin]
-        goarch: [amd64] # ["386", amd64, arm64]
+        goos: [linux, windows, darwin]
+        goarch: ["386", amd64, arm64]
         exclude:
           - goarch: "386"
             goos: darwin
           - goarch: arm64
             goos: windows
     steps:
-    - uses: actions/checkout@v4
-    - uses: wangyoucao577/go-release-action@6ac7dba1f9e61850053324549cb6bc88e4b473d2 # v1.51
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+
+    - uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5.0.2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        goos: ${{ matrix.goos }}
-        goarch: ${{ matrix.goarch }}
-        project_path: "cmd/main.go"
-        binary_name: "jamf-webhooks"
-        # upload: false
-        # extra_files: LICENSE README.md
+        go-version-file: 'go.mod'
+
+    - run: go build -v -o jamf_webhooks-${{ matrix.goos }}-${{ matrix.goarch }} cmd/main.go
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
+        CGO_ENABLED: 0
+    - run: ls -la
+
+    # - uses: actions/upload-release-asset@v1.0.1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ needs.release.outputs.upload_url}} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+    #     asset_path: ./${{ matrix.target.goos }}-${{ matrix.target.goarch }}
+    #     asset_name: alpaca_${{ needs.release.outputs.version }}_${{ matrix.target.goos }}-${{ matrix.target.goarch }}${{ matrix.target.ext }}
+    #     asset_content_type: application/zip
