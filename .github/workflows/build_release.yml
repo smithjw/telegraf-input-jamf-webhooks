@@ -24,24 +24,14 @@ jobs:
         go-version-file: 'go.mod'
 
     - name: Build
-      run: go build -v -o jamf_webhooks cmd/main.go
+      run: go build -o jamf_webhooks-${{ matrix.goos }}_${{ matrix.goarch }} cmd/main.go
       env:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
-        # CGO_ENABLED: 0
-
-    - run: ls -la
 
     - name: Release
       uses: softprops/action-gh-release@c062e08bd532815e2082a85e87e3ef29c3e6d191 # v2.0.8
       if: startsWith(github.ref, 'refs/tags/v')
       with:
-        files: jamf_webhooks
-    # - uses: actions/upload-release-asset@v1.0.1
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     upload_url: ${{ needs.release.outputs.upload_url}} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-    #     asset_path: ./${{ matrix.target.goos }}-${{ matrix.target.goarch }}
-    #     asset_name: alpaca_${{ needs.release.outputs.version }}_${{ matrix.target.goos }}-${{ matrix.target.goarch }}${{ matrix.target.ext }}
-    #     asset_content_type: application/zip
+        files: jamf_webhooks-${{ matrix.goos }}_${{ matrix.goarch }}
+        generate_release_notes: true
