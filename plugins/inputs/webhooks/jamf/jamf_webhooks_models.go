@@ -84,24 +84,24 @@ func (s ComputerEvent) NewMetric() telegraf.Metric {
 		"username":      s.Event.Username,
 	}
 	fields := map[string]interface{}{
-		"building":           s.Event.Building,
-		"department":         s.Event.Department,
-		"device_mac_address": s.Event.MacAddress,
-		"device_model":       s.Event.Model,
-		"device_name":        s.Event.DeviceName,
-		"device_udid":        s.Event.UDID,
-		"email_address":      s.Event.EmailAddress,
-		"os_buid":            s.Event.OSBuild,
-		"os_version":         s.Event.OSVersion,
-		"room":               s.Event.Room,
-		"user_directory_id":  s.Event.UserDirectoryID,
-		"user_real_name":     s.Event.RealName,
-		// AlternateMacAddress
-		// IPAddress
-		// Phone
-		// Position
-		// RealName
-		// ReportedIPAddress
+		"alternate_mac_address": s.Event.AlternateMacAddress,
+		"building":              s.Event.Building,
+		"department":            s.Event.Department,
+		"device_mac_address":    s.Event.MacAddress,
+		"device_model":          s.Event.Model,
+		"device_name":           s.Event.DeviceName,
+		"device_udid":           s.Event.UDID,
+		"email_address":         s.Event.EmailAddress,
+		"ip_address":            s.Event.IPAddress,
+		"os_buid":               s.Event.OSBuild,
+		"os_version":            s.Event.OSVersion,
+		"phone":                 s.Event.Phone,
+		"position":              s.Event.Position,
+		"realname":              s.Event.RealName,
+		"reported_ip_address":   s.Event.ReportedIPAddress,
+		"room":                  s.Event.Room,
+		"user_directory_id":     s.Event.UserDirectoryID,
+		"user_real_name":        s.Event.RealName,
 	}
 	m := metric.New(measurement, tags, fields, time.Unix(s.Webhook.Timestamp, 0))
 	return m
@@ -207,7 +207,7 @@ func (s DeviceAddedToDEPEvent) NewMetric() telegraf.Metric {
 //   - MobileDeviceEnrolled
 //   - MobileDeviceInventoryCompleted
 //   - MobileDevicePushSent
-//   - MobileDeviceUnenrolled
+//   - MobileDeviceUnEnrolled
 type MobileDeviceEvent struct {
 	Event   MobileDevice `json:"mobileDevice"`
 	Webhook Webhook      `json:"webhook"`
@@ -222,20 +222,20 @@ func (s MobileDeviceEvent) NewMetric() telegraf.Metric {
 		"username":      s.Event.Username,
 	}
 	fields := map[string]interface{}{
-		"device_name":          s.Event.DeviceName,
-		"os_version":           s.Event.OSVersion,
-		"os_build":             s.Event.OSBuild,
-		"device_model":         s.Event.Model,
 		"device_model_display": s.Event.ModelDisplay,
+		"device_model":         s.Event.Model,
+		"device_name":          s.Event.DeviceName,
 		"device_udid":          s.Event.UDID,
+		"icci_id":              s.Event.IcciID,
+		"imei":                 s.Event.Imei,
+		"ip_address":           s.Event.IPAddress,
+		"os_build":             s.Event.OSBuild,
+		"os_version":           s.Event.OSVersion,
+		"product":              s.Event.Product,
+		"room":                 s.Event.Room,
 		"user_directory_id":    s.Event.UserDirectoryID,
-		// IcciID
-		// Imei
-		// IPAddress
-		// Product
-		// Room
-		// Version
-		// WifiMacAddress
+		"version":              s.Event.Version,
+		"wifi_mac_address":     s.Event.WifiMacAddress,
 	}
 	m := metric.New(measurement, tags, fields, time.Unix(s.Webhook.Timestamp, 0))
 	return m

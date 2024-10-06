@@ -23,6 +23,36 @@ func JamfWebhookRequest(t *testing.T, event, jsonString string) {
 	}
 }
 
+func JamfWebhookRequestWithQueryParams(t *testing.T, event, jsonString string, queryParams map[string]string, expectedStatus int) {
+	var acc testutil.Accumulator
+	jwh := &JamfWebhook{
+		Path:       "/jamf",
+		URLQueries: []string{"hostname", "other"},
+		acc:        &acc,
+		log:        testutil.Logger{},
+	}
+
+	queryStr := "?"
+	for key, value := range queryParams {
+		queryStr += key + "=" + value + "&"
+	}
+	queryStr = strings.TrimSuffix(queryStr, "&")
+	req, err := http.NewRequest("POST", "/jamf"+queryStr, strings.NewReader(jsonString))
+	require.NoError(t, err)
+	w := httptest.NewRecorder()
+	jwh.eventHandler(w, req)
+	if w.Code != expectedStatus {
+		t.Errorf("POST "+event+" returned HTTP status code %v.\nExpected %v", w.Code, expectedStatus)
+	}
+	for _, query := range jwh.URLQueries {
+		if value, exists := queryParams[query]; exists && value != "" {
+			if !acc.HasTag("jamf_webhooks", query) {
+				t.Errorf("Expected tag '%s' with value '%s', but it was not found", query, value)
+			}
+		}
+	}
+}
+
 func TestComputerPolicyFinishedEvent(t *testing.T) {
 	JamfWebhookRequest(t, "ComputerPolicyFinished", ComputerPolicyFinishedJSON())
 }
@@ -83,8 +113,8 @@ func TestMobileDevicePushSentEvent(t *testing.T) {
 	JamfWebhookRequest(t, "MobileDevicePushSent", MobileDevicePushSentJSON())
 }
 
-func TestMobileDeviceUnenrolledEvent(t *testing.T) {
-	JamfWebhookRequest(t, "MobileDeviceUnenrolled", MobileDeviceUnenrolledJSON())
+func TestMobileDeviceUnEnrolledEvent(t *testing.T) {
+	JamfWebhookRequest(t, "MobileDeviceUnEnrolled", MobileDeviceUnEnrolledJSON())
 }
 
 // func TestPatchSoftwareTitleUpdatedEvent(t *testing.T) {
@@ -106,3 +136,18 @@ func TestPushSentEvent(t *testing.T) {
 // func TestSmartGroupUserMembershipChangeEvent(t *testing.T) {
 // 	JamfWebhookRequest(t, "SmartGroupUserMembershipChange", SmartGroupUserMembershipChangeJSON())
 // }
+
+func TestJamfWebhookWithQueryParamsSuccess(t *testing.T) {
+	queryParams := map[string]string{
+		"hostname": "test1.example.com",
+		"other":    "value2",
+		"unused":   "test",
+	}
+	JamfWebhookRequestWithQueryParams(
+		t,
+		"ComputerInventoryCompleted",
+		`{"webhook": {"webhookEvent": "ComputerInventoryCompleted"}}`, // JSON payload
+		queryParams,
+		http.StatusOK, // Expected status
+	)
+}

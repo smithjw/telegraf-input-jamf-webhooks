@@ -441,7 +441,7 @@ func MobileDevicePushSentJSON() string {
 }`
 }
 
-func MobileDeviceUnenrolledJSON() string {
+func MobileDeviceUnEnrolledJSON() string {
 	return `{
 	"event": {
 		"bluetoothMacAddress": "string",

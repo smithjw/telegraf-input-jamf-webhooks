@@ -11,10 +11,10 @@ import (
 )
 
 type JamfWebhook struct {
-	Path   string
-	Secret string
-	acc    telegraf.Accumulator
-	log    telegraf.Logger
+	Path       string
+	URLQueries []string
+	acc        telegraf.Accumulator
+	log        telegraf.Logger
 	auth.BasicAuth
 }
 
@@ -28,6 +28,11 @@ func (jwh *JamfWebhook) Register(router *mux.Router, acc telegraf.Accumulator, l
 
 func (jwh *JamfWebhook) eventHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
+
+	if !jwh.Verify(r) {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	data, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -66,7 +71,15 @@ func (jwh *JamfWebhook) eventHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	if e != nil {
 		p := e.NewMetric()
-		jwh.acc.AddFields("jamf_webhooks", p.Fields(), p.Tags(), p.Time())
+		tags := p.Tags()
+
+		for _, queryParam := range jwh.URLQueries {
+			value := r.URL.Query().Get(queryParam)
+			if value != "" {
+				tags[queryParam] = value
+			}
+		}
+		jwh.acc.AddFields("jamf_webhooks", p.Fields(), tags, p.Time())
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -88,8 +101,8 @@ func (e *newEventError) Error() string {
 	return e.s
 }
 
-func (jh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
-	jh.log.Debugf("New %v event received", name)
+func (jwh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
+	jwh.log.Debugf("New %v event received", name)
 	switch name {
 	case "ComputerInventoryCompleted":
 		return generateEvent(data, &ComputerEvent{})
@@ -119,7 +132,7 @@ func (jh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
 		return generateEvent(data, &MobileDeviceEvent{})
 	case "MobileDevicePushSent":
 		return generateEvent(data, &MobileDeviceEvent{})
-	case "MobileDeviceUnenrolled":
+	case "MobileDeviceUnEnrolled":
 		return generateEvent(data, &MobileDeviceEvent{})
 	// case "PatchSoftwareTitleUpdated":
 	// 	return generateEvent(data, &PatchSoftwareTitleUpdatedEvent{})
@@ -136,4 +149,8 @@ func (jh *JamfWebhook) NewEvent(data []byte, name string) (Event, error) {
 	default:
 		return nil, &newEventError{"Not a recognized event type"}
 	}
+}
+
+func (jwh *JamfWebhook) SetURLQueries(urlQueries []string) {
+	jwh.URLQueries = urlQueries
 }
