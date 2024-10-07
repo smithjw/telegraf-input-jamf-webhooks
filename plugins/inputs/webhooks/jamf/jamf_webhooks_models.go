@@ -2,6 +2,7 @@ package jamf
 
 import (
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/influxdata/telegraf"
@@ -79,9 +80,9 @@ func (s ComputerEvent) NewMetric() telegraf.Metric {
 	tags := map[string]string{
 		"event":         s.Webhook.Event,
 		"jss_id":        strconv.Itoa(s.Event.JssID),
-		"management_id": s.Event.ManagementID,
+		"management_id": strings.ToLower(s.Event.ManagementID),
 		"serial_number": s.Event.SerialNumber,
-		"username":      s.Event.Username,
+		"username":      strings.ToLower(s.Event.Username),
 	}
 	fields := map[string]interface{}{
 		"alternate_mac_address": s.Event.AlternateMacAddress,
@@ -91,10 +92,10 @@ func (s ComputerEvent) NewMetric() telegraf.Metric {
 		"device_model":          s.Event.Model,
 		"device_name":           s.Event.DeviceName,
 		"device_udid":           s.Event.UDID,
-		"email_address":         s.Event.EmailAddress,
+		"email_address":         strings.ToLower(s.Event.EmailAddress),
 		"ip_address":            s.Event.IPAddress,
 		"os_buid":               s.Event.OSBuild,
-		"os_version":            s.Event.OSVersion,
+		"os_version":            NormaliseOSVersion(s.Event.OSVersion),
 		"phone":                 s.Event.Phone,
 		"position":              s.Event.Position,
 		"realname":              s.Event.RealName,
@@ -146,11 +147,11 @@ func (s ComputerCheckInEvent) NewMetric() telegraf.Metric {
 		"serial_number": s.Event.Computer.SerialNumber,
 		"management_id": s.Event.Computer.ManagementID,
 		"jss_id":        strconv.Itoa(s.Event.Computer.JssID),
+		"username":      strings.ToLower(s.Event.Computer.Username),
 	}
 	fields := map[string]interface{}{
-		"check_in_username": s.Event.Username,
+		"check_in_username": strings.ToLower(s.Event.Username),
 		"check_in_trigger":  s.Event.Trigger,
-		"username":          s.Event.Computer.Username,
 		"device_name":       s.Event.Computer.DeviceName,
 	}
 	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
@@ -217,8 +218,8 @@ func (s MobileDeviceEvent) NewMetric() telegraf.Metric {
 		"event":         s.Webhook.Event,
 		"jss_id":        strconv.Itoa(s.Event.JssID),
 		"serial_number": s.Event.SerialNumber,
-		"management_id": s.Event.ManagementID,
-		"username":      s.Event.Username,
+		"management_id": strings.ToLower(s.Event.ManagementID),
+		"username":      strings.ToLower(s.Event.Username),
 	}
 	fields := map[string]interface{}{
 		"device_model_display": s.Event.ModelDisplay,
@@ -228,8 +229,8 @@ func (s MobileDeviceEvent) NewMetric() telegraf.Metric {
 		"icci_id":              s.Event.IcciID,
 		"imei":                 s.Event.Imei,
 		"ip_address":           s.Event.IPAddress,
-		"os_build":             s.Event.OSBuild,
-		"os_version":           s.Event.OSVersion,
+		"ios_build":            s.Event.OSBuild,
+		"ios_version":          NormaliseOSVersion(s.Event.OSVersion),
 		"product":              s.Event.Product,
 		"room":                 s.Event.Room,
 		"user_directory_id":    s.Event.UserDirectoryID,
@@ -285,4 +286,16 @@ func (s PushSentEvent) NewMetric() telegraf.Metric {
 	}
 	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
+}
+
+func NormaliseOSVersion(version string) string {
+	sections := strings.Split(version, ".")
+	switch len(sections) {
+	case 2: // Append ".0" if the version has only two sections
+		return version + ".0"
+	case 1: // Append ".0.0" if the version has only one section
+		return version + ".0.0"
+	default:
+		return version
+	}
 }
