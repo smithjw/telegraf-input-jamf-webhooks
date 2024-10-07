@@ -103,7 +103,7 @@ func (s ComputerEvent) NewMetric() telegraf.Metric {
 		"user_directory_id":     s.Event.UserDirectoryID,
 		"user_real_name":        s.Event.RealName,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
 
@@ -128,7 +128,7 @@ func (s ComputerPolicyFinishedEvent) NewMetric() telegraf.Metric {
 		"successful":  s.Event.Successful,
 		"device_name": s.Event.Computer.DeviceName,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
 
@@ -154,7 +154,7 @@ func (s ComputerCheckInEvent) NewMetric() telegraf.Metric {
 		"username":          s.Event.Computer.Username,
 		"device_name":       s.Event.Computer.DeviceName,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
 
@@ -182,7 +182,7 @@ func (s DeviceAddedToDEPEvent) NewMetric() telegraf.Metric {
 		"assigned_date": s.Event.DeviceAssignedDate,
 		"model":         s.Event.Model,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
 
@@ -237,7 +237,7 @@ func (s MobileDeviceEvent) NewMetric() telegraf.Metric {
 		"version":              s.Event.Version,
 		"wifi_mac_address":     s.Event.WifiMacAddress,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
 
@@ -264,7 +264,7 @@ func (s JSSEvent) NewMetric() telegraf.Metric {
 		"host_address":      s.Event.HostAddress,
 		"is_cluster_master": s.Event.IsClusterMaster,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
 
@@ -284,6 +284,6 @@ func (s PushSentEvent) NewMetric() telegraf.Metric {
 	fields := map[string]interface{}{
 		"type": s.Event.Type,
 	}
-	m := metric.New(measurement, tags, fields, time.UnixMicro(s.Webhook.Timestamp))
+	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
 }
