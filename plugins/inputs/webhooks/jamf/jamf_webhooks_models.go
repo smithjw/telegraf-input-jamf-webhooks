@@ -101,7 +101,6 @@ func (s ComputerEvent) NewMetric() telegraf.Metric {
 		"reported_ip_address":   s.Event.ReportedIPAddress,
 		"room":                  s.Event.Room,
 		"user_directory_id":     s.Event.UserDirectoryID,
-		"user_real_name":        s.Event.RealName,
 	}
 	m := metric.New(measurement, tags, fields, time.UnixMilli(s.Webhook.Timestamp))
 	return m
